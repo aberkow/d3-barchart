@@ -70,7 +70,7 @@
 	
 	// ---------------------------
 	//tutorial 2
-	var data = __webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"./data.tsv\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+	var data = __webpack_require__(2);
 	
 	var width = 420,
 	    barHeight = 20;
@@ -79,13 +79,13 @@
 	
 	var chart = d3.select('.chart').attr('width', width);
 	
-	d3.tsv('data', type, function (error, data) {
+	d3.tsv('data.tsv', type, function (error, data) {
+	
 	  x.domain([0, d3.max(data, function (d) {
 	    return d.value;
 	  })]);
-	
 	  chart.attr('height', barHeight * data.length);
-	
+	  console.log(data.length, 'from chart');
 	  var bar = chart.selectAll('g').data(data).enter().append('g').attr('transform', function (d, i) {
 	    return 'translate(0,' + i * barHeight + ')';
 	  });
@@ -100,9 +100,9 @@
 	});
 	
 	function type(d) {
-	  d.value = +d.value;
+	  d.value = Number(d.value);
 	  return d;
-	}
+	};
 
 /***/ },
 /* 1 */
@@ -16336,6 +16336,12 @@
 	  Object.defineProperty(exports, '__esModule', { value: true });
 	
 	})));
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	module.exports = [{"name\tvalue":"Locke\t4"},{"name\tvalue":"Reyes\t8"},{"name\tvalue":"Ford\t15"},{"name\tvalue":"Jarrah\t16"},{"name\tvalue":"Shephard\t23"},{"name\tvalue":"Kwon\t42"}]
 
 /***/ }
 /******/ ]);
