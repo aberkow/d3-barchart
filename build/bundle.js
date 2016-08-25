@@ -70,37 +70,131 @@
 	
 	// ---------------------------
 	//tutorial 2
-	var data = __webpack_require__(2);
+	// const data = require('./data.tsv');
+	//
+	// const width = 420,
+	//       barHeight = 20;
+	//
+	// let x = d3.scaleLinear()
+	//             .range( [0, width] );
+	//
+	// const chart = d3.select('.chart')
+	//                 .attr('width', width);
+	//
+	// d3.tsv('data.tsv', type, function(error, data){
+	//
+	//   x.domain(
+	//     [0, d3.max(data, function(d){
+	//       return d.value;
+	//     })]
+	//   );
+	//   chart.attr('height', barHeight * data.length);
+	//     console.log(data.length, 'from chart');
+	//     var bar = chart.selectAll('g')
+	//                 .data(data)
+	//               .enter().append('g')
+	//                 .attr('transform', function(d, i){
+	//                   return 'translate(0,' + i * barHeight + ')';
+	//                 });
+	//     bar.append('rect')
+	//       .attr('width', function(d){
+	//         return x(d.value);
+	//       })
+	//       .attr('height', barHeight - 1);
+	//     bar.append('text')
+	//       .attr('x', function(d){
+	//         return x(d.value) - 3;
+	//       })
+	//       .attr('y', barHeight / 2)
+	//       .attr('dy', '.35em')
+	//       .text(function(d) {
+	//         return d.value;
+	//       });
+	// });
+	//
+	// function type(d){
+	//   d.value = Number(d.value);
+	//   return d;
+	// };
 	
-	var width = 420,
-	    barHeight = 20;
+	// tutorial 3
+	//______________________
 	
-	var x = d3.scaleLinear().range([0, width]);
+	var alphabet = __webpack_require__(2);
 	
-	var chart = d3.select('.chart').attr('width', width);
+	var margin = {
+	  top: 20,
+	  right: 30,
+	  bottom: 30,
+	  left: 40
+	};
+	var width = 960 - margin.left - margin.right;
+	var height = 500 - margin.top - margin.bottom;
 	
-	d3.tsv('data.tsv', type, function (error, data) {
+	var x = d3.scaleBand().range([0, width]).round(.1);
 	
-	  x.domain([0, d3.max(data, function (d) {
+	var y = d3.scaleLinear().range([height, 0]);
+	
+	var xAxis = d3.axisBottom(x);
+	
+	// d3.svg.axis()
+	//                 .scale(x)
+	//                 .orient('bottom');
+	
+	var yAxis = d3.axisLeft(x).ticks(10, '%');
+	
+	// d3.svg.axis()
+	//                 .scale(y)
+	//                 .orient('left')
+	//                 .ticks(10, '%');
+	
+	var chart = d3.select('.chart').attr('width', width + margin.left + margin.right).attr('height', height + margin.top + margin.bottom).append('g').attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+	
+	d3.tsv('alphabet.tsv', type, function (error, data) {
+	  x.domain(data.map(function (d) {
+	    return d.name;
+	  }));
+	  y.domain([0, d3.max(data, function (d) {
 	    return d.value;
 	  })]);
-	  chart.attr('height', barHeight * data.length);
-	  console.log(data.length, 'from chart');
-	  var bar = chart.selectAll('g').data(data).enter().append('g').attr('transform', function (d, i) {
-	    return 'translate(0,' + i * barHeight + ')';
-	  });
-	  bar.append('rect').attr('width', function (d) {
-	    return x(d.value);
-	  }).attr('height', barHeight - 1);
-	  bar.append('text').attr('x', function (d) {
-	    return x(d.value) - 3;
-	  }).attr('y', barHeight / 2).attr('dy', '.35em').text(function (d) {
-	    return d.value;
-	  });
+	
+	  chart.append('g').attr('class', 'x axis').attr('transform', 'translate(0' + height + ')').call(xAxis);
+	
+	  chart.append('g').attr('class', 'y axis').call(yAxis).append('text').attr('transform', 'rotate(-90)').attr('y', 6).attr('dy', '.71em').style('text-anchor', 'end').text('Frequency');
+	
+	  // var barWidth = width / data.length;
+	
+	  chart.selectAll('g').data(data).enter().append('rect').attr('class', 'bar').attr('x', function (d) {
+	    return x(d.name);
+	  }).attr('y', function (d) {
+	    return y(d.value);
+	  }).attr('height', function (d) {
+	    return height - y(d.value);
+	  }).attr('width', x.band());
+	  //     .attr('transform', function(d, i){
+	  //       return 'translate(' + i * barWidth + ',0)';
+	  //     });
+	  // bar.append('rect')
+	  //   .attr('y', function(d){
+	  //     return y(d.value);
+	  //   })
+	  //   .attr('height', function(d){
+	  //     return height - y(d.value);
+	  //   })
+	  //   .attr('width', barWidth - 1);
+	  // bar.append('text')
+	  //   .attr('x', barWidth / 2)
+	  //   .attr('y', function(d){
+	  //     return y(d.value) + 3;
+	  //   });
+	  //   .attr('dy', '.75em')
+	  //   .text(function(d){
+	  //     return d.value;
+	  //   });
 	});
 	
-	function type(d) {
-	  d.value = Number(d.value);
+	var type = function type(d) {
+	  d.value = +d.value;
 	  return d;
 	};
 
@@ -16341,7 +16435,7 @@
 /* 2 */
 /***/ function(module, exports) {
 
-	module.exports = [{"name\tvalue":"Locke\t4"},{"name\tvalue":"Reyes\t8"},{"name\tvalue":"Ford\t15"},{"name\tvalue":"Jarrah\t16"},{"name\tvalue":"Shephard\t23"},{"name\tvalue":"Kwon\t42"}]
+	module.exports = [{"letter  frequency":"A .08167"},{"letter  frequency":"B .01492"},{"letter  frequency":"C .02782"},{"letter  frequency":"D .04253"},{"letter  frequency":"E .12702"},{"letter  frequency":"F .02288"},{"letter  frequency":"G .02015"},{"letter  frequency":"H .06094"},{"letter  frequency":"I .06966"},{"letter  frequency":"J .00153"},{"letter  frequency":"K .00772"},{"letter  frequency":"L .04025"},{"letter  frequency":"M .02406"},{"letter  frequency":"N .06749"},{"letter  frequency":"O .07507"},{"letter  frequency":"P .01929"},{"letter  frequency":"Q .00095"},{"letter  frequency":"R .05987"},{"letter  frequency":"S .06327"},{"letter  frequency":"T .09056"},{"letter  frequency":"U .02758"},{"letter  frequency":"V .00978"},{"letter  frequency":"W .02360"},{"letter  frequency":"X .00150"},{"letter  frequency":"Y .01974"},{"letter  frequency":"Z .00074"}]
 
 /***/ }
 /******/ ]);

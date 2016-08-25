@@ -15,8 +15,25 @@
   fill: steelblue;
 }
 
+/*.chart text {
+  fill: white;
+  font: 10px sans-serif;
+  text-anchor: end; end is for side to side charts
+}*/
+
 .chart text {
   fill: white;
   font: 10px sans-serif;
-  text-anchor: end;
+  text-anchor: center;
+}
+
+.axis text {
+  font: 10px sans-serif;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000000;
+  shape-rendering: crispEdges;
 }
